@@ -99,7 +99,7 @@ export default function RoastMyWebsite() {
       <footer className="w-full py-6 px-8 mb-6 mt-auto opacity-0 animate-fade-up [animation-delay:600ms]">
         <div className="max-w-md mx-auto flex flex-col items-center gap-6">
           <Link 
-            href="https://x.com/ExaAILabs"
+            href="https://dashboard.exa.ai/"
             target="_blank"
             className="w-full max-w-xl bg-black hover:bg-gray-900 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-none transition-all flex items-center justify-center gap-2 group whitespace-normal text-sm md:text-base hover:scale-[1.02] hover:shadow-lg"
           >
@@ -109,7 +109,7 @@ export default function RoastMyWebsite() {
   
           <p className="text-md text-center text-gray-600 pt-2">
             <Link 
-              href="https://exa.ai"
+              href="https://github.com/exa-labs/roast-my-website"
               target="_blank"
               className="hover:underline cursor-pointer inline-flex items-center gap-1 underline"
             >

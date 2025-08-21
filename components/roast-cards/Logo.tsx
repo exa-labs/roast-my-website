@@ -6,9 +6,9 @@ export function ExaLogo() {
     <Image 
       src="/exa_logo.png" 
       alt="Exa AI Logo" 
-      width={48} 
-      height={48} 
-      className="object-contain w-8 h-8 sm:w-12 sm:h-12"
+      width={64} 
+      height={64} 
+      className="object-contain w-10 h-10 sm:w-16 sm:h-16"
     />
   );
 }

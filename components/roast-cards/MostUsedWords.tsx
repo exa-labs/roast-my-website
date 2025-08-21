@@ -13,9 +13,9 @@ export function MostUsedWords({ words }: MostUsedWordsProps) {
     <div className="rounded-none border bg-white p-6 shadow-sm animate-fade-up">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-2">
-          <span className="text-2xl">📝</span>
+          <span className="text-2xl">😭</span>
           <h3 className="text-xl font-semibold text-gray-900">
-            Most Overused Words on Your Website
+            Overused Words on Your Website
           </h3>
         </div>
         <ExaLogo />

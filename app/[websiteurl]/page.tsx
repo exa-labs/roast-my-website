@@ -20,48 +20,21 @@ interface LinkedInData {
 }
 
 interface LLMAnalysis {
-  brutal_first_impression?: {
-    headline: string;
-    roast: string;
-  };
-  design_roast?: {
-    brutal_feedback: string;
-    specific_issues: string[];
-  };
-  content_destruction?: {
-    harsh_reality: string;
-    cringe_moments: string[];
-  };
-  user_experience_nightmare?: {
-    pain_points: string;
-    user_frustrations: string[];
-  };
-  most_used_words?: {
-    overused_terms: Array<{
-      word: string;
-      emoji: string;
-    }>;
-  };
-  business_reality_check?: {
-    company_vibe: string;
-    target_audience_confusion: string;
-    competitive_disadvantage: string;
-  };
-  linkedin_intel?: {
-    professional_image: string;
-    website_vs_linkedin_gap: string;
-  };
-  savage_recommendations?: Array<{
-    priority: 'HIGH' | 'MEDIUM' | 'LOW';
-    fix: string;
-    why_it_matters: string;
+  roast?: string[];
+  strengths?: string[];
+  cringy_content?: string[];
+  improvements?: string[];
+  overused_words?: Array<{
+    word: string;
+    emoji: string;
   }>;
-  final_verdict?: {
-    overall_score: number;
-    one_liner_roast: string;
-    biggest_problem: string;
-    one_thing_done_right: string;
+  joke?: string;
+  competitor?: {
+    name: string;
+    comparison: string;
   };
+  money?: string;
+  human_form?: string;
 }
 
 export default function WebsiteRoastPage({ params }: { params: { websiteurl: string } }) {
@@ -316,18 +289,18 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
               </div>
             </div>
 
-            {/* Brutal Website Roast Display with Cards */}
+            {/* Website Roast Display with Cards */}
             {llmAnalysis && (
               <div className="mt-16 mb-10 space-y-16">
                 
-                {/* First Impression Card */}
-                {llmAnalysis.brutal_first_impression && (
+                {/* Roast Points */}
+                {Array.isArray(llmAnalysis.roast) && llmAnalysis.roast.length > 0 && (
                   <>
                     <div className="opacity-0 animate-fade-up">
-                      <HighlightCard
-                        title={llmAnalysis.brutal_first_impression.headline}
+                      <ListCard
+                        title="Roast"
                         emoji="🔥"
-                        content={llmAnalysis.brutal_first_impression.roast}
+                        items={llmAnalysis.roast}
                         gradient="from-red-500 to-orange-500"
                       />
                     </div>
@@ -335,108 +308,56 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                   </>
                 )}
 
-                {/* Design Roast */}
-                {llmAnalysis.design_roast && (
+                {/* Strengths */}
+                {Array.isArray(llmAnalysis.strengths) && llmAnalysis.strengths.length > 0 && (
                   <>
                     <div className="opacity-0 animate-fade-up [animation-delay:200ms]">
                       <HighlightCard
-                        title="Design Roast"
-                        emoji="🎨"
+                        title="Strengths"
+                        emoji="💪"
                         content={
-                          <div className="space-y-4">
-                            <p className="text-gray-700 leading-relaxed">{llmAnalysis.design_roast.brutal_feedback}</p>
-                            {Array.isArray(llmAnalysis.design_roast.specific_issues) && (
-                              <div className="space-y-2 pl-1">
-                                {llmAnalysis.design_roast.specific_issues.map((issue: string, index: number) => (
-                                  <div key={index} className="flex items-start gap-4">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0 mt-2" />
-                                    <p className="text-sm text-gray-600 leading-relaxed">{issue}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                          <div className="space-y-3">
+                            {llmAnalysis.strengths.map((strength, index) => {
+                              const [title, ...descriptionParts] = strength.split(':');
+                              const description = descriptionParts.join(':').trim();
+                              return (
+                                <p key={index} className="text-gray-700 leading-relaxed">
+                                  <span className="font-bold">{title}:</span> {description}
+                                </p>
+                              );
+                            })}
                           </div>
                         }
-                        gradient="from-purple-500 to-pink-500"
+                        gradient="from-green-500 to-blue-500"
                       />
                     </div>
                     <ShareButton websiteUrl={params.websiteurl} />
                   </>
                 )}
 
-                {/* Content Destruction */}
-                {llmAnalysis.content_destruction && (
+                {/* Joke */}
+                {llmAnalysis.joke && (
                   <>
                     <div className="opacity-0 animate-fade-up [animation-delay:400ms]">
-                      <ListCard
-                        title="Content Cringe Moments"
-                        emoji="📝"
-                        items={[
-                          llmAnalysis.content_destruction.harsh_reality,
-                          ...(Array.isArray(llmAnalysis.content_destruction.cringe_moments) 
-                            ? llmAnalysis.content_destruction.cringe_moments 
-                            : [])
-                        ].filter(Boolean)}
-                        gradient="from-yellow-500 to-red-500"
+                      <HighlightCard
+                        title="Joke"
+                        emoji="😂"
+                        content={llmAnalysis.joke}
+                        gradient="from-yellow-400 to-orange-400"
                       />
                     </div>
                     <ShareButton websiteUrl={params.websiteurl} />
                   </>
                 )}
 
-                {/* UX Nightmare */}
-                {llmAnalysis.user_experience_nightmare && (
+                {/* Competitor */}
+                {llmAnalysis.competitor && (
                   <>
                     <div className="opacity-0 animate-fade-up [animation-delay:600ms]">
-                      <ListCard
-                        title="User Experience Nightmare"
-                        emoji="😤"
-                        items={[
-                          llmAnalysis.user_experience_nightmare.pain_points,
-                          ...(Array.isArray(llmAnalysis.user_experience_nightmare.user_frustrations) 
-                            ? llmAnalysis.user_experience_nightmare.user_frustrations 
-                            : [])
-                        ].filter(Boolean)}
-                        gradient="from-red-500 to-purple-500"
-                      />
-                    </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
-                  </>
-                )}
-
-                {/* Most Used Words */}
-                {Array.isArray(llmAnalysis.most_used_words?.overused_terms) && llmAnalysis.most_used_words.overused_terms.length > 0 && (
-                  <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:800ms]">
-                      <MostUsedWords words={llmAnalysis.most_used_words.overused_terms} />
-                    </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
-                  </>
-                )}
-
-                {/* Business Reality Check */}
-                {llmAnalysis.business_reality_check && (
-                  <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:1000ms]">
                       <HighlightCard
-                        title="Business Reality Check"
-                        emoji="💼"
-                        content={
-                          <div className="space-y-4">
-                            <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Company Vibe:</h4>
-                              <p className="text-gray-700">{llmAnalysis.business_reality_check.company_vibe}</p>
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Target Audience Confusion:</h4>
-                              <p className="text-gray-700">{llmAnalysis.business_reality_check.target_audience_confusion}</p>
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Competitive Disadvantage:</h4>
-                              <p className="text-gray-700">{llmAnalysis.business_reality_check.competitive_disadvantage}</p>
-                            </div>
-                          </div>
-                        }
+                        title="Competitor Comparison"
+                        emoji="🏆"
+                        content={llmAnalysis.competitor.comparison}
                         gradient="from-blue-500 to-green-500"
                       />
                     </div>
@@ -444,50 +365,80 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                   </>
                 )}
 
-                {/* LinkedIn Intel */}
-                {llmAnalysis.linkedin_intel && (
+                {/* Human Form */}
+                {llmAnalysis.human_form && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:1200ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:800ms]">
                       <HighlightCard
-                        title="LinkedIn Intel"
-                        emoji="🔍"
-                        content={
-                          <div className="space-y-4">
-                            <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Professional Image:</h4>
-                              <p className="text-gray-700">{llmAnalysis.linkedin_intel.professional_image}</p>
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-gray-900 mb-2">Website vs LinkedIn Gap:</h4>
-                              <p className="text-gray-700">{llmAnalysis.linkedin_intel.website_vs_linkedin_gap}</p>
-                            </div>
-                          </div>
-                        }
-                        gradient="from-blue-600 to-indigo-600"
+                        title="Human Form"
+                        emoji="👤"
+                        content={llmAnalysis.human_form}
+                        gradient="from-indigo-500 to-purple-500"
                       />
                     </div>
                     <ShareButton websiteUrl={params.websiteurl} />
                   </>
                 )}
 
-                {/* Savage Recommendations */}
-                {Array.isArray(llmAnalysis.savage_recommendations) && llmAnalysis.savage_recommendations.length > 0 && (
+                {/* Money */}
+                {llmAnalysis.money && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:1400ms]">
-                      <RecommendationsCard recommendations={llmAnalysis.savage_recommendations} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:1000ms]">
+                      <HighlightCard
+                        title="Money Talk"
+                        emoji="💰"
+                        content={llmAnalysis.money}
+                        gradient="from-green-500 to-emerald-500"
+                      />
                     </div>
                     <ShareButton websiteUrl={params.websiteurl} />
                   </>
                 )}
 
-                {/* Final Verdict */}
-                {llmAnalysis.final_verdict && (
+                {/* Cringy Content */}
+                {Array.isArray(llmAnalysis.cringy_content) && llmAnalysis.cringy_content.length > 0 && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:1200ms]">
+                      <ListCard
+                        title="Cringy Content"
+                        emoji="🤡"
+                        items={llmAnalysis.cringy_content}
+                        gradient="from-yellow-500 to-red-500"
+                      />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* Improvements */}
+                {Array.isArray(llmAnalysis.improvements) && llmAnalysis.improvements.length > 0 && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:1400ms]">
+                      <HighlightCard
+                        title="Improvements"
+                        emoji="🛠️"
+                        content={
+                          <div className="space-y-3">
+                            {llmAnalysis.improvements.map((improvement, index) => (
+                              <p key={index} className="text-gray-700 leading-relaxed">{improvement}</p>
+                            ))}
+                          </div>
+                        }
+                        gradient="from-blue-500 to-purple-500"
+                      />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* Overused Words */}
+                {Array.isArray(llmAnalysis.overused_words) && llmAnalysis.overused_words.length > 0 && (
                   <>
                     <div className="opacity-0 animate-fade-up [animation-delay:1600ms]">
-                      <FinalVerdictCard verdict={llmAnalysis.final_verdict} />
+                      <MostUsedWords words={llmAnalysis.overused_words} />
                     </div>
                     <div className="flex flex-col items-center justify-center gap-4 pt-8">
-                      <p className="text-gray-500 text-center">Share your brutal roast with the world!</p>
+                      <p className="text-gray-500 text-center">Share your website roast with the world!</p>
                       <ShareButton websiteUrl={params.websiteurl} />
                     </div>
                   </>
@@ -505,15 +456,21 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
             <footer className="w-full py-6 px-8 mb-6 mt-16 opacity-0 animate-fade-up [animation-delay:1000ms]">
               <div className="max-w-md mx-auto flex flex-col items-center gap-6">
                 <Link 
-                  href="/"
+                  href="https://dashboard.exa.ai/"
                   className="w-full max-w-xl bg-black hover:bg-gray-900 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-none transition-all flex items-center justify-center gap-2 group whitespace-normal text-sm md:text-base hover:scale-[1.02] hover:shadow-lg"
                 >
-                  <span>Roast another website</span>
+                  <span>Built with Exa API  -  Try here</span>
                   <ChevronRight className="w-4 h-4 shrink-0" />
                 </Link>
                 
                 <p className="text-md text-center text-gray-600 pt-2">
-                  Powered by AI - Brutally honest feedback for your web presence
+                  <Link 
+                    href="https://github.com/exa-labs/roast-my-website"
+                    target="_blank"
+                    className="hover:underline cursor-pointer inline-flex items-center gap-1 underline"
+                  >
+                    this project is opensource - go star it on github
+                  </Link>
                 </p>
               </div>
             </footer>

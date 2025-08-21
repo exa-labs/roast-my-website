@@ -20,111 +20,89 @@ export async function POST(req: NextRequest) {
 
     // Define the comprehensive website roasting schema
     const websiteRoastSchema = z.object({
-      brutal_first_impression: z.object({
-        headline: z.string(),
-        roast: z.string()
+      roast: z.array(z.string()).length(5),
+      strengths: z.array(z.string()).length(5),
+      joke: z.string(),
+      competitor: z.object({
+        name: z.string(),
+        comparison: z.string()
       }),
-      design_roast: z.object({
-        brutal_feedback: z.string(),
-        specific_issues: z.array(z.string()).length(3)
-      }),
-      content_destruction: z.object({
-        harsh_reality: z.string(),
-        cringe_moments: z.array(z.string()).length(3)
-      }),
-      user_experience_nightmare: z.object({
-        pain_points: z.string(),
-        user_frustrations: z.array(z.string()).length(3)
-      }),
-      most_used_words: z.object({
-        overused_terms: z.array(z.object({
-          word: z.string(),
-          emoji: z.string()
-        })).length(6)
-      }),
-      business_reality_check: z.object({
-        company_vibe: z.string(),
-        target_audience_confusion: z.string(),
-        competitive_disadvantage: z.string()
-      }),
-      linkedin_intel: z.object({
-        professional_image: z.string(),
-        website_vs_linkedin_gap: z.string()
-      }).optional(),
-      savage_recommendations: z.array(z.object({
-        priority: z.enum(['HIGH', 'MEDIUM', 'LOW']),
-        fix: z.string(),
-        why_it_matters: z.string()
-      })).length(5),
-      final_verdict: z.object({
-        overall_score: z.number().min(1).max(10),
-        one_liner_roast: z.string(),
-        biggest_problem: z.string(),
-        one_thing_done_right: z.string()
-      })
+      human_form: z.string(),
+      money: z.string(),
+      cringy_content: z.array(z.string()).length(3),
+      improvements: z.array(z.string()).length(5),
+      overused_words: z.array(z.object({
+        word: z.string(),
+        emoji: z.string()
+      })).length(3)
     });
 
-    const prompt = `You are a brutally honest website critic who doesn't hold back. You're like that friend who tells you the truth even when it hurts. Write like you're roasting a friend's website - be savage but specific.
-
-Analyze this website and give it the roasting it deserves:
+    const prompt = `You are a website critic who gives honest feedback. Analyze this website and provide feedback in these exact sections:
 
 WEBSITE URL: ${websiteurl}
 
-WEBSITE CONTENT:
-${mainpageText}
+${linkedinText ? `LINKEDIN PROFILE:
+  ${linkedinText}
+  ` : ''}
 
 SUBPAGES CONTENT:
 ${subpagesText}
 
-${linkedinText ? `LINKEDIN PROFILE:
-${linkedinText}
-` : ''}
+WEBSITE CONTENT:
+${mainpageText}
 
-ROAST THIS WEBSITE BRUTALLY:
 
-🔥 BRUTAL FIRST IMPRESSION
-What's your immediate reaction when you land on this site? Be savage but specific.
+Provide feedback in these sections only:
 
-🎨 DESIGN ROAST
-Tear apart their design choices. What looks amateur? What screams "I made this in 2005"? Be specific about colors, layout, typography, images.
+🔥 ROAST (5 points)
+Give 5 brutal but specific roast points about this website. Make 5 friendly jokes on them. Keep it fun and unique. Talk like a brutal friend.
 
-📝 CONTENT DESTRUCTION
-Roast their copy, messaging, and content. What's confusing? What's boring? What makes you cringe? Quote specific examples.
+💪 STRENGTHS (5 points) 
+Give 5 strengths in "heading: subheading" format. Give 5 things they're great at. Hype them up.
 
-😤 USER EXPERIENCE NIGHTMARE
-What will frustrate users? What's hard to find? What's broken or annoying? Be specific about navigation, loading, mobile experience.
+😂 JOKE
+Write a dad joke about them also can inlcude a pun in it (with the company name).
 
-📝 MOST OVERUSED WORDS
-What words do they use way too much on their website? Find the 6 most overused/cringy terms and give each an appropriate emoji.
+🏆 COMPETITOR
+Pick some competitors/alternatives and praise the current website more than the competitor(s). Keep this very positive.
 
-💼 BUSINESS REALITY CHECK
-Based on their website, what vibe do they give off? Who do they think they're targeting vs who they're actually reaching? How do they stack up against competitors?
+👤 HUMAN FORM
+If this company was a human, who would it be? Format: "If this company was a human, it would be <famous person> because <reason>" (keep positive). This should be very unique.
 
-${linkedinText ? `🔍 LINKEDIN INTEL
-How does their LinkedIn presence compare to their website? Any gaps or inconsistencies?` : ''}
+💰 MONEY (1-2 lines)
+Something like: "Very high chance this becomes a billion dollar company because <add praise>"
 
-🛠️ SAVAGE RECOMMENDATIONS (5 fixes)
-What needs to be fixed ASAP? Prioritize by HIGH/MEDIUM/LOW and explain why each matters.
+🤡 CRINGY CONTENT (3 moments)
+Find exactly 3 cringy moments from their content. Format each as: "Cringy content..." followed by why it's cringy in a few words.
 
-⚖️ FINAL VERDICT
-Overall score (1-10), one brutal one-liner, biggest problem, and one thing they actually did right (if anything).
+🛠️ IMPROVEMENTS (5 simple recommendations)
+Give 5 simple, positive, actually useful improvements.
+
+📝 OVERUSED WORDS (top 3)
+Find the top 3 most overused words on their website with emojis.
+
+Make it feel personal - like you really read their website in depth and get who they are!
 
 RULES:
-- Be brutally honest but constructive
-- Use specific examples from their actual content
-- Write like a human, not a generic AI
-- Keep it simple and direct
-- No corporate speak or fluff
-- Be savage but not mean-spirited
-- Reference actual elements from their site
-
-Make this roast so specific they'll know you actually looked at their site!`;
+- Use simple words and simple English
+- Keep sentences short and to the point
+- One line answers are okay
+- Don't repeat points between sections
+- Be specific to their actual website content
+- Make it feel human, not AI-generated
+- Write like you're chatting to a friend
+- Keep it in casual tone, strictly no formal language
+- You can use references to their website content in the answers (don't use the same reference again and again)
+- Write in second person using "you"
+- You should have strong opinions and be slightly polarizing answers.
+- Keep sentences short and simple
+- Use simple words`;
 
     try {
       const { partialObjectStream } = streamObject({
         model: anthropic('claude-sonnet-4-20250514'),
         schema: websiteRoastSchema,
-        system: "You are a brutally honest website critic. Write like a human who doesn't hold back but gives constructive feedback. Be specific, direct, and reference actual content from the website.",
+        system: "You are a website critic who gives honest feedback. Use simple words and simple English. Keep sentences short and to the point. Don't repeat points between sections. Make sure each section is unique and specific to their website content.",
         prompt: prompt,
         providerOptions: {
           anthropic: {
@@ -160,7 +138,7 @@ Make this roast so specific they'll know you actually looked at their site!`;
         const { partialObjectStream } = streamObject({
           model: anthropic('claude-3-7-sonnet-20250219'),
           schema: websiteRoastSchema,
-          system: "You are a brutally honest website critic. Write like a human who doesn't hold back but gives constructive feedback. Be specific, direct, and reference actual content from the website.",
+          system: "You are a website critic who gives honest feedback. Use simple words and simple English. Keep sentences short and to the point. Don't repeat points between sections. Make sure each section is unique and specific to their website content.",
           prompt: prompt,
           providerOptions: {
             anthropic: {
