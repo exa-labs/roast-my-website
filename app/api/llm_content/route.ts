@@ -25,19 +25,22 @@ export async function POST(req: NextRequest) {
         roast: z.string()
       }),
       design_roast: z.object({
-        score: z.number().min(1).max(10),
         brutal_feedback: z.string(),
         specific_issues: z.array(z.string()).length(3)
       }),
       content_destruction: z.object({
-        score: z.number().min(1).max(10),
         harsh_reality: z.string(),
         cringe_moments: z.array(z.string()).length(3)
       }),
       user_experience_nightmare: z.object({
-        score: z.number().min(1).max(10),
         pain_points: z.string(),
         user_frustrations: z.array(z.string()).length(3)
+      }),
+      most_used_words: z.object({
+        overused_terms: z.array(z.object({
+          word: z.string(),
+          emoji: z.string()
+        })).length(6)
       }),
       business_reality_check: z.object({
         company_vibe: z.string(),
@@ -82,14 +85,17 @@ ROAST THIS WEBSITE BRUTALLY:
 🔥 BRUTAL FIRST IMPRESSION
 What's your immediate reaction when you land on this site? Be savage but specific.
 
-🎨 DESIGN ROAST (Score 1-10)
+🎨 DESIGN ROAST
 Tear apart their design choices. What looks amateur? What screams "I made this in 2005"? Be specific about colors, layout, typography, images.
 
-📝 CONTENT DESTRUCTION (Score 1-10)  
+📝 CONTENT DESTRUCTION
 Roast their copy, messaging, and content. What's confusing? What's boring? What makes you cringe? Quote specific examples.
 
-😤 USER EXPERIENCE NIGHTMARE (Score 1-10)
+😤 USER EXPERIENCE NIGHTMARE
 What will frustrate users? What's hard to find? What's broken or annoying? Be specific about navigation, loading, mobile experience.
+
+📝 MOST OVERUSED WORDS
+What words do they use way too much on their website? Find the 6 most overused/cringy terms and give each an appropriate emoji.
 
 💼 BUSINESS REALITY CHECK
 Based on their website, what vibe do they give off? Who do they think they're targeting vs who they're actually reaching? How do they stack up against competitors?
@@ -101,7 +107,7 @@ How does their LinkedIn presence compare to their website? Any gaps or inconsist
 What needs to be fixed ASAP? Prioritize by HIGH/MEDIUM/LOW and explain why each matters.
 
 ⚖️ FINAL VERDICT
-Overall score, one brutal one-liner, biggest problem, and one thing they actually did right (if anything).
+Overall score (1-10), one brutal one-liner, biggest problem, and one thing they actually did right (if anything).
 
 RULES:
 - Be brutally honest but constructive
@@ -116,10 +122,15 @@ Make this roast so specific they'll know you actually looked at their site!`;
 
     try {
       const { partialObjectStream } = streamObject({
-        model: anthropic('claude-3-5-sonnet-latest'),
+        model: anthropic('claude-sonnet-4-20250514'),
         schema: websiteRoastSchema,
         system: "You are a brutally honest website critic. Write like a human who doesn't hold back but gives constructive feedback. Be specific, direct, and reference actual content from the website.",
-        prompt: prompt
+        prompt: prompt,
+        providerOptions: {
+          anthropic: {
+            sendReasoning: false
+          }
+        }
       });
 
       // Create a TransformStream to convert the stream to a ReadableStream
@@ -147,10 +158,15 @@ Make this roast so specific they'll know you actually looked at their site!`;
       // If rate limited, retry with fallback model
       if (error instanceof Error && 'status' in error && error.status === 429) {
         const { partialObjectStream } = streamObject({
-          model: anthropic('claude-3-5-sonnet-20240620'),
+          model: anthropic('claude-3-7-sonnet-20250219'),
           schema: websiteRoastSchema,
           system: "You are a brutally honest website critic. Write like a human who doesn't hold back but gives constructive feedback. Be specific, direct, and reference actual content from the website.",
-          prompt: prompt
+          prompt: prompt,
+          providerOptions: {
+            anthropic: {
+              sendReasoning: false
+            }
+          }
         });
 
         const stream = new ReadableStream({

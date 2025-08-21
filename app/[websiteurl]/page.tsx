@@ -4,6 +4,12 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
+import { HighlightCard } from '@/components/roast-cards/HighlightCard';
+import { ListCard } from '@/components/roast-cards/ListCard';
+import { MostUsedWords } from '@/components/roast-cards/MostUsedWords';
+import { RecommendationsCard } from '@/components/roast-cards/RecommendationsCard';
+import { FinalVerdictCard } from '@/components/roast-cards/FinalVerdictCard';
+import { ShareButton } from '@/components/roast-cards/ShareButton';
 
 interface WebsiteData {
   results?: any[];
@@ -19,19 +25,22 @@ interface LLMAnalysis {
     roast: string;
   };
   design_roast?: {
-    score: number;
     brutal_feedback: string;
     specific_issues: string[];
   };
   content_destruction?: {
-    score: number;
     harsh_reality: string;
     cringe_moments: string[];
   };
   user_experience_nightmare?: {
-    score: number;
     pain_points: string;
     user_frustrations: string[];
+  };
+  most_used_words?: {
+    overused_terms: Array<{
+      word: string;
+      emoji: string;
+    }>;
   };
   business_reality_check?: {
     company_vibe: string;
@@ -206,7 +215,7 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
 
   return (
     <>
-      <header className="sm:fixed relative top-0 left-0 w-full bg-secondary-default z-50 sm:shadow-sm">
+      <header className="relative top-0 left-0 w-full z-50 sm:shadow-sm">
         <div className="absolute top-5 left-5 opacity-0 animate-fade-up [animation-delay:200ms] hidden sm:block">
         </div>
         <div className="text-center sm:mb-2 sm:pb-2 space-y-2 opacity-0 animate-fade-up [animation-delay:400ms]">
@@ -217,7 +226,7 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
         </div>
       </header>
 
-      <div className="pt-8 min-h-screen w-full max-w-4xl mx-auto px-4 py-10 sm:pt-32">
+      <div className="min-h-screen w-full max-w-4xl mx-auto px-4 py-10">
         {/* Loading States */}
         {(websiteLoading || linkedinLoading) && (
           <div className="flex items-center justify-center mt-10">
@@ -307,174 +316,182 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
               </div>
             </div>
 
-            {/* Brutal Website Roast Display */}
+            {/* Brutal Website Roast Display with Cards */}
             {llmAnalysis && (
-              <div className="space-y-8 opacity-0 animate-fade-up [animation-delay:800ms]">
+              <div className="mt-16 mb-10 space-y-16">
                 
-                {/* First Impression */}
+                {/* First Impression Card */}
                 {llmAnalysis.brutal_first_impression && (
-                  <div className="border border-red-200 bg-red-50 p-6 rounded-sm shadow-sm">
-                    <h2 className="text-2xl font-bold mb-4 text-red-800">🔥 {llmAnalysis.brutal_first_impression.headline}</h2>
-                    <p className="text-red-700 text-lg leading-relaxed">{llmAnalysis.brutal_first_impression.roast}</p>
-                  </div>
+                  <>
+                    <div className="opacity-0 animate-fade-up">
+                      <HighlightCard
+                        title={llmAnalysis.brutal_first_impression.headline}
+                        emoji="🔥"
+                        content={llmAnalysis.brutal_first_impression.roast}
+                        gradient="from-red-500 to-orange-500"
+                      />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
                 )}
 
-                {/* Scores Section */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {llmAnalysis.design_roast && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm text-center">
-                      <h3 className="text-lg font-semibold mb-2">🎨 Design Score</h3>
-                      <div className="text-4xl font-bold mb-2 text-brand-default">{llmAnalysis.design_roast.score}/10</div>
-                      <p className="text-gray-600 text-sm">{llmAnalysis.design_roast.brutal_feedback}</p>
-                    </div>
-                  )}
-                  {llmAnalysis.content_destruction && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm text-center">
-                      <h3 className="text-lg font-semibold mb-2">📝 Content Score</h3>
-                      <div className="text-4xl font-bold mb-2 text-brand-default">{llmAnalysis.content_destruction.score}/10</div>
-                      <p className="text-gray-600 text-sm">{llmAnalysis.content_destruction.harsh_reality}</p>
-                    </div>
-                  )}
-                  {llmAnalysis.user_experience_nightmare && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm text-center">
-                      <h3 className="text-lg font-semibold mb-2">😤 UX Score</h3>
-                      <div className="text-4xl font-bold mb-2 text-brand-default">{llmAnalysis.user_experience_nightmare.score}/10</div>
-                      <p className="text-gray-600 text-sm">{llmAnalysis.user_experience_nightmare.pain_points}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Detailed Roasts */}
-                <div className="space-y-6">
-                  
-                  {/* Design Issues */}
-                  {llmAnalysis.design_roast?.specific_issues && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm">
-                      <h3 className="text-xl font-semibold mb-4">🎨 Design Issues</h3>
-                      <ul className="space-y-2">
-                        {llmAnalysis.design_roast.specific_issues.map((issue: string, index: number) => (
-                          <li key={index} className="flex items-start">
-                            <span className="text-red-500 mr-2">•</span>
-                            <span className="text-gray-700">{issue}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Content Cringe */}
-                  {llmAnalysis.content_destruction?.cringe_moments && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm">
-                      <h3 className="text-xl font-semibold mb-4">📝 Content Cringe Moments</h3>
-                      <ul className="space-y-2">
-                        {llmAnalysis.content_destruction.cringe_moments.map((moment: string, index: number) => (
-                          <li key={index} className="flex items-start">
-                            <span className="text-orange-500 mr-2">•</span>
-                            <span className="text-gray-700">{moment}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* UX Frustrations */}
-                  {llmAnalysis.user_experience_nightmare?.user_frustrations && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm">
-                      <h3 className="text-xl font-semibold mb-4">😤 User Frustrations</h3>
-                      <ul className="space-y-2">
-                        {llmAnalysis.user_experience_nightmare.user_frustrations.map((frustration: string, index: number) => (
-                          <li key={index} className="flex items-start">
-                            <span className="text-red-500 mr-2">•</span>
-                            <span className="text-gray-700">{frustration}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Business Reality Check */}
-                  {llmAnalysis.business_reality_check && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm">
-                      <h3 className="text-xl font-semibold mb-4">💼 Business Reality Check</h3>
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-medium text-gray-900 mb-2">Company Vibe:</h4>
-                          <p className="text-gray-700">{llmAnalysis.business_reality_check.company_vibe}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-gray-900 mb-2">Target Audience Confusion:</h4>
-                          <p className="text-gray-700">{llmAnalysis.business_reality_check.target_audience_confusion}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-gray-900 mb-2">Competitive Disadvantage:</h4>
-                          <p className="text-gray-700">{llmAnalysis.business_reality_check.competitive_disadvantage}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* LinkedIn Intel */}
-                  {llmAnalysis.linkedin_intel && (
-                    <div className="border border-blue-200 bg-blue-50 p-6 rounded-sm shadow-sm">
-                      <h3 className="text-xl font-semibold mb-4 text-blue-800">🔍 LinkedIn Intel</h3>
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="font-medium text-blue-900 mb-2">Professional Image:</h4>
-                          <p className="text-blue-700">{llmAnalysis.linkedin_intel.professional_image}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-blue-900 mb-2">Website vs LinkedIn Gap:</h4>
-                          <p className="text-blue-700">{llmAnalysis.linkedin_intel.website_vs_linkedin_gap}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Savage Recommendations */}
-                  {llmAnalysis.savage_recommendations && (
-                    <div className="border border-gray-200 p-6 rounded-sm shadow-sm">
-                      <h3 className="text-xl font-semibold mb-4">🛠️ Savage Recommendations</h3>
-                      <div className="space-y-4">
-                        {llmAnalysis.savage_recommendations.map((rec, index: number) => (
-                          <div key={index} className="border-l-4 border-brand-default pl-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className={`px-2 py-1 text-xs font-semibold rounded ${
-                                rec.priority === 'HIGH' ? 'bg-red-100 text-red-800' :
-                                rec.priority === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-green-100 text-green-800'
-                              }`}>
-                                {rec.priority}
-                              </span>
-                            </div>
-                            <h4 className="font-medium text-gray-900 mb-1">{rec.fix}</h4>
-                            <p className="text-gray-600 text-sm">{rec.why_it_matters}</p>
+                {/* Design Roast */}
+                {llmAnalysis.design_roast && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:200ms]">
+                      <HighlightCard
+                        title="Design Roast"
+                        emoji="🎨"
+                        content={
+                          <div className="space-y-4">
+                            <p className="text-gray-700 leading-relaxed">{llmAnalysis.design_roast.brutal_feedback}</p>
+                            {Array.isArray(llmAnalysis.design_roast.specific_issues) && (
+                              <div className="space-y-2 pl-1">
+                                {llmAnalysis.design_roast.specific_issues.map((issue: string, index: number) => (
+                                  <div key={index} className="flex items-start gap-4">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0 mt-2" />
+                                    <p className="text-sm text-gray-600 leading-relaxed">{issue}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        ))}
-                      </div>
+                        }
+                        gradient="from-purple-500 to-pink-500"
+                      />
                     </div>
-                  )}
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
 
-                  {/* Final Verdict */}
-                  {llmAnalysis.final_verdict && (
-                    <div className="border border-gray-800 bg-gray-900 text-white p-6 rounded-sm shadow-sm">
-                      <h3 className="text-xl font-semibold mb-4 text-white">⚖️ Final Verdict</h3>
-                      <div className="text-center mb-6">
-                        <div className="text-5xl font-bold mb-2 text-brand-default">{llmAnalysis.final_verdict.overall_score}/10</div>
-                        <p className="text-xl italic mb-4">"{llmAnalysis.final_verdict.one_liner_roast}"</p>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="font-medium mb-2 text-red-300">Biggest Problem:</h4>
-                          <p className="text-gray-300">{llmAnalysis.final_verdict.biggest_problem}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium mb-2 text-green-300">One Thing Done Right:</h4>
-                          <p className="text-gray-300">{llmAnalysis.final_verdict.one_thing_done_right}</p>
-                        </div>
-                      </div>
+                {/* Content Destruction */}
+                {llmAnalysis.content_destruction && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:400ms]">
+                      <ListCard
+                        title="Content Cringe Moments"
+                        emoji="📝"
+                        items={[
+                          llmAnalysis.content_destruction.harsh_reality,
+                          ...(Array.isArray(llmAnalysis.content_destruction.cringe_moments) 
+                            ? llmAnalysis.content_destruction.cringe_moments 
+                            : [])
+                        ].filter(Boolean)}
+                        gradient="from-yellow-500 to-red-500"
+                      />
                     </div>
-                  )}
-                </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* UX Nightmare */}
+                {llmAnalysis.user_experience_nightmare && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:600ms]">
+                      <ListCard
+                        title="User Experience Nightmare"
+                        emoji="😤"
+                        items={[
+                          llmAnalysis.user_experience_nightmare.pain_points,
+                          ...(Array.isArray(llmAnalysis.user_experience_nightmare.user_frustrations) 
+                            ? llmAnalysis.user_experience_nightmare.user_frustrations 
+                            : [])
+                        ].filter(Boolean)}
+                        gradient="from-red-500 to-purple-500"
+                      />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* Most Used Words */}
+                {Array.isArray(llmAnalysis.most_used_words?.overused_terms) && llmAnalysis.most_used_words.overused_terms.length > 0 && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:800ms]">
+                      <MostUsedWords words={llmAnalysis.most_used_words.overused_terms} />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* Business Reality Check */}
+                {llmAnalysis.business_reality_check && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:1000ms]">
+                      <HighlightCard
+                        title="Business Reality Check"
+                        emoji="💼"
+                        content={
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Company Vibe:</h4>
+                              <p className="text-gray-700">{llmAnalysis.business_reality_check.company_vibe}</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Target Audience Confusion:</h4>
+                              <p className="text-gray-700">{llmAnalysis.business_reality_check.target_audience_confusion}</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Competitive Disadvantage:</h4>
+                              <p className="text-gray-700">{llmAnalysis.business_reality_check.competitive_disadvantage}</p>
+                            </div>
+                          </div>
+                        }
+                        gradient="from-blue-500 to-green-500"
+                      />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* LinkedIn Intel */}
+                {llmAnalysis.linkedin_intel && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:1200ms]">
+                      <HighlightCard
+                        title="LinkedIn Intel"
+                        emoji="🔍"
+                        content={
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Professional Image:</h4>
+                              <p className="text-gray-700">{llmAnalysis.linkedin_intel.professional_image}</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900 mb-2">Website vs LinkedIn Gap:</h4>
+                              <p className="text-gray-700">{llmAnalysis.linkedin_intel.website_vs_linkedin_gap}</p>
+                            </div>
+                          </div>
+                        }
+                        gradient="from-blue-600 to-indigo-600"
+                      />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* Savage Recommendations */}
+                {Array.isArray(llmAnalysis.savage_recommendations) && llmAnalysis.savage_recommendations.length > 0 && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:1400ms]">
+                      <RecommendationsCard recommendations={llmAnalysis.savage_recommendations} />
+                    </div>
+                    <ShareButton websiteUrl={params.websiteurl} />
+                  </>
+                )}
+
+                {/* Final Verdict */}
+                {llmAnalysis.final_verdict && (
+                  <>
+                    <div className="opacity-0 animate-fade-up [animation-delay:1600ms]">
+                      <FinalVerdictCard verdict={llmAnalysis.final_verdict} />
+                    </div>
+                    <div className="flex flex-col items-center justify-center gap-4 pt-8">
+                      <p className="text-gray-500 text-center">Share your brutal roast with the world!</p>
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
+                  </>
+                )}
               </div>
             )}
 

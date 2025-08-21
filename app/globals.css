@@ -68,7 +68,6 @@ body {
 }
 
 :root {
-  --background: var(--secondary-default);
   --accent: var(--brand-default);
   --accent-background: var(--brand-default);
 }
