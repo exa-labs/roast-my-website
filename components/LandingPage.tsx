@@ -65,7 +65,7 @@ export default function RoastMyWebsite() {
         </h1>
 
         <p className="text-black mb-12 opacity-0 animate-fade-up [animation-delay:400ms]">
-          Exa-powered AI analyzes your website and gives you brutally honest feedback
+          AI analyzes your website and gives you brutally honest feedback
         </p>
 
         <form onSubmit={handleRoast} className="space-y-6">
@@ -113,7 +113,7 @@ export default function RoastMyWebsite() {
               target="_blank"
               className="hover:underline cursor-pointer inline-flex items-center gap-1 underline"
             >
-              View this project's source code
+              this project is opensource - go star it on github
             </Link>
           </p>
         </div>
