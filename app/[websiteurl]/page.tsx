@@ -192,38 +192,71 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
         <div className="absolute top-5 left-5 opacity-0 animate-fade-up [animation-delay:200ms] hidden sm:block">
         </div>
         <div className="text-center sm:mb-2 sm:pb-2 space-y-2 opacity-0 animate-fade-up [animation-delay:400ms]">
-          <p className="pt-5 text-xl sm:text-2xl font-bold text-gray-900">Roast My Website</p>
+          <p className="pt-3 text-xl sm:text-2xl font-bold text-gray-900">Roast My Website</p>
           <div className="text-gray-600 text-md sm:text-lg">
-            Brutally honest feedback for your web presence
+            built using Exa API
           </div>
         </div>
       </header>
 
-      <div className="min-h-screen w-full max-w-4xl mx-auto px-4 py-10">
-        {/* Loading States */}
-        {(websiteLoading || linkedinLoading) && (
-          <div className="flex items-center justify-center mt-10">
-            <div className="text-center space-y-4">
-              <p className="text-gray-600 text-xl animate-pulse">Scraping website content...</p>
-              <div className="flex gap-4 justify-center">
-                <div className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${websiteLoading ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
-                  <span className="text-sm text-gray-600">Website Data</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${linkedinLoading ? 'bg-blue-500 animate-pulse' : 'bg-green-500'}`}></div>
-                  <span className="text-sm text-gray-600">LinkedIn Data</span>
+     
+        <div className="min-h-screen w-full max-w-4xl mx-auto px-4 py-10">
+
+
+           {/* Top CTA Button */}
+            <div className="w-full mx-auto px-4 opacity-0 animate-fade-up [animation-delay:600ms]">
+              <div className="flex justify-center mb-8">
+                <Link 
+                  href="https://dashboard.exa.ai/"
+                  target="_blank"
+                  className="bg-black hover:bg-gray-900 text-white font-medium py-2 px-4 rounded-none transition-all flex items-center gap-2 group text-sm hover:scale-[1.02] hover:shadow-lg"
+                >
+                  <span>Built with Exa API - Try here</span>
+                  <ChevronRight className="w-4 h-4 shrink-0" />
+                </Link>
+              </div>
+            </div>
+        
+          {/* Loading States */}
+          {(websiteLoading || linkedinLoading) && (
+            <div className="flex items-center justify-center mt-10">
+              <div className="flex items-center gap-3">
+                <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-gray-900"></div>
+                <p className="text-gray-600 text-lg">Scraping website content...</p>
+              </div>
+            </div>
+          )}
+
+        
+        {/* Website Preview - Show as soon as we have website data */}
+        {!isLoading && websiteData && websiteData.results && websiteData.results.length > 0 && (
+          <div className="mb-10 opacity-0 animate-fade-up [animation-delay:300ms] [animation-duration:800ms]">
+            <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+              <div className="flex items-start gap-4">
+                {websiteData.results[0].image && (
+                  <div className="flex-shrink-0">
+                    <img 
+                      src={websiteData.results[0].image} 
+                      alt={websiteData.results[0].title || params.websiteurl}
+                      className="h-20 rounded-lg object-cover border border-gray-200"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">
+                    {websiteData.results[0].title || params.websiteurl}
+                  </h2>
+                  <p className="text-gray-600 text-sm">{params.websiteurl}</p>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {llmLoading && (
-          <div className="flex items-center justify-center mt-10">
-            <p className="text-gray-600 text-xl animate-pulse">Analyzing content with AI...</p>
-          </div>
-        )}
+        
 
         {error && (
           <div className="flex items-center justify-center mt-10 mb-10">
@@ -246,57 +279,17 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
           </div>
         )}
 
-        {!isLoading && !error && websiteData && (
+                {!isLoading && !error && websiteData && (
           <>
-            {/* Website Data Display */}
-            <div className="mb-10 opacity-0 animate-fade-up [animation-delay:600ms]">
-              <div className="border border-gray-200 p-6 rounded-sm shadow-sm">
-                <h2 className="text-2xl font-bold mb-4">Website: {params.websiteurl}</h2>
-                
-                {websiteData.results && websiteData.results.length > 0 && (
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">Scraped Website Content:</h3>
-                    <div className="space-y-3">
-                      {websiteData.results.map((result: any, index: number) => (
-                        <div key={index} className="p-3 bg-gray-50 rounded-sm">
-                          <h4 className="font-medium text-sm text-gray-900">{result.title || `Page ${index + 1}`}</h4>
-                          <p className="text-xs text-gray-600 mt-1">{result.url}</p>
-                          {result.text && (
-                            <p className="text-sm text-gray-700 mt-2 line-clamp-3">{result.text.substring(0, 200)}...</p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {linkedinData && linkedinData.results && linkedinData.results.length > 0 && (
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2">LinkedIn Profile Data:</h3>
-                    <div className="space-y-3">
-                      {linkedinData.results.map((result: any, index: number) => (
-                        <div key={index} className="p-3 bg-blue-50 rounded-sm">
-                          <h4 className="font-medium text-sm text-gray-900">{result.title || `LinkedIn Profile ${index + 1}`}</h4>
-                          <p className="text-xs text-gray-600 mt-1">{result.url}</p>
-                          {result.text && (
-                            <p className="text-sm text-gray-700 mt-2 line-clamp-3">{result.text.substring(0, 200)}...</p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
 
             {/* Website Roast Display with Cards */}
             {llmAnalysis && (
-              <div className="mt-16 mb-10 space-y-16">
+              <div className="mb-10 space-y-16">
                 
                 {/* Roast Points */}
                 {Array.isArray(llmAnalysis.roast) && llmAnalysis.roast.length > 0 && (
                   <>
-                    <div className="opacity-0 animate-fade-up">
+                    <div className="opacity-0 animate-fade-up [animation-delay:500ms] [animation-duration:800ms]">
                       <ListCard
                         title="Roast"
                         emoji="🔥"
@@ -304,14 +297,16 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-red-500 to-orange-500"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:600ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Strengths */}
                 {Array.isArray(llmAnalysis.strengths) && llmAnalysis.strengths.length > 0 && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:200ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:700ms] [animation-duration:800ms]">
                       <HighlightCard
                         title="Strengths"
                         emoji="💪"
@@ -331,14 +326,16 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-green-500 to-blue-500"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:800ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Joke */}
                 {llmAnalysis.joke && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:400ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:900ms] [animation-duration:800ms]">
                       <HighlightCard
                         title="Joke"
                         emoji="😂"
@@ -346,14 +343,16 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-yellow-400 to-orange-400"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:1000ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Competitor */}
                 {llmAnalysis.competitor && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:600ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:1100ms] [animation-duration:800ms]">
                       <HighlightCard
                         title="Competitor Comparison"
                         emoji="🏆"
@@ -361,14 +360,16 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-blue-500 to-green-500"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:1200ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Human Form */}
                 {llmAnalysis.human_form && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:800ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:1300ms] [animation-duration:800ms]">
                       <HighlightCard
                         title="Human Form"
                         emoji="👤"
@@ -376,14 +377,16 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-indigo-500 to-purple-500"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:1400ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Money */}
                 {llmAnalysis.money && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:1000ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:1500ms] [animation-duration:800ms]">
                       <HighlightCard
                         title="Money Talk"
                         emoji="💰"
@@ -391,14 +394,16 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-green-500 to-emerald-500"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:1600ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Cringy Content */}
                 {Array.isArray(llmAnalysis.cringy_content) && llmAnalysis.cringy_content.length > 0 && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:1200ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:1700ms] [animation-duration:800ms]">
                       <ListCard
                         title="Cringy Content"
                         emoji="🤡"
@@ -406,14 +411,16 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-yellow-500 to-red-500"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:1800ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Improvements */}
                 {Array.isArray(llmAnalysis.improvements) && llmAnalysis.improvements.length > 0 && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:1400ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:1900ms] [animation-duration:800ms]">
                       <HighlightCard
                         title="Improvements"
                         emoji="🛠️"
@@ -427,53 +434,61 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                         gradient="from-blue-500 to-purple-500"
                       />
                     </div>
-                    <ShareButton websiteUrl={params.websiteurl} />
+                    <div className="opacity-0 animate-fade-up [animation-delay:2000ms] [animation-duration:600ms]">
+                      <ShareButton websiteUrl={params.websiteurl} />
+                    </div>
                   </>
                 )}
 
                 {/* Overused Words */}
                 {Array.isArray(llmAnalysis.overused_words) && llmAnalysis.overused_words.length > 0 && (
                   <>
-                    <div className="opacity-0 animate-fade-up [animation-delay:1600ms]">
+                    <div className="opacity-0 animate-fade-up [animation-delay:2100ms] [animation-duration:800ms]">
                       <MostUsedWords words={llmAnalysis.overused_words} />
                     </div>
-                    <div className="flex flex-col items-center justify-center gap-4 pt-8">
+                    <div className="flex flex-col items-center justify-center gap-4 pt-8 opacity-0 animate-fade-up [animation-delay:2200ms] [animation-duration:600ms]">
                       <p className="text-gray-500 text-center">Share your website roast with the world!</p>
                       <ShareButton websiteUrl={params.websiteurl} />
                     </div>
                   </>
                 )}
+
+                <footer className="w-full py-6 px-8 mb-6 mt-16 opacity-0 animate-fade-up [animation-delay:2300ms] [animation-duration:800ms]">
+                  <div className="max-w-md mx-auto flex flex-col items-center gap-6">
+                    <Link 
+                      href="https://dashboard.exa.ai/"
+                      className="w-full max-w-xl bg-black hover:bg-gray-900 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-none transition-all flex items-center justify-center gap-2 group whitespace-normal text-sm md:text-base hover:scale-[1.02] hover:shadow-lg"
+                    >
+                      <span>Built with Exa API  -  Try here</span>
+                      <ChevronRight className="w-4 h-4 shrink-0" />
+                    </Link>
+                    
+                    <p className="text-md text-center text-gray-600 pt-2">
+                      <Link 
+                        href="https://github.com/exa-labs/roast-my-website"
+                        target="_blank"
+                        className="hover:underline cursor-pointer inline-flex items-center gap-1 underline"
+                      >
+                        this project is opensource - go star it on github
+                      </Link>
+                    </p>
+                  </div>
+                </footer>
+
               </div>
+              
             )}
 
-            {/* Show loading state for LLM analysis */}
-            {!llmAnalysis && !llmLoading && websiteData && (
-              <div className="flex items-center justify-center py-24">
-                <p className="text-gray-600 text-xl">Waiting for AI analysis...</p>
-              </div>
-            )}
+                 {llmLoading && (
+                  <div className="flex items-center justify-center mt-10">
+                    <div className="flex items-center gap-3">
+                      <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-gray-900"></div>
+                      <p className="text-gray-600 text-lg">Analyzing your website...</p>
+                    </div>
+                  </div>
+                )}
 
-            <footer className="w-full py-6 px-8 mb-6 mt-16 opacity-0 animate-fade-up [animation-delay:1000ms]">
-              <div className="max-w-md mx-auto flex flex-col items-center gap-6">
-                <Link 
-                  href="https://dashboard.exa.ai/"
-                  className="w-full max-w-xl bg-black hover:bg-gray-900 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-none transition-all flex items-center justify-center gap-2 group whitespace-normal text-sm md:text-base hover:scale-[1.02] hover:shadow-lg"
-                >
-                  <span>Built with Exa API  -  Try here</span>
-                  <ChevronRight className="w-4 h-4 shrink-0" />
-                </Link>
-                
-                <p className="text-md text-center text-gray-600 pt-2">
-                  <Link 
-                    href="https://github.com/exa-labs/roast-my-website"
-                    target="_blank"
-                    className="hover:underline cursor-pointer inline-flex items-center gap-1 underline"
-                  >
-                    this project is opensource - go star it on github
-                  </Link>
-                </p>
-              </div>
-            </footer>
+           
           </>
         )}
       </div>
