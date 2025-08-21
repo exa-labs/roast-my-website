@@ -19,7 +19,8 @@ export async function POST(req: NextRequest) {
           type: "auto",
           text: true,
           numResults: 1,
-          livecrawl: "always",
+          // @ts-ignore
+          livecrawl: "preferred",
           subpages: 5,
           subpageTarget: ["about", "pricing", "faq", "blog"],
           includeDomains: [websiteurl]
