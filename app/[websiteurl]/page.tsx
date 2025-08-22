@@ -452,7 +452,7 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                       <MostUsedWords words={llmAnalysis.overused_words} />
                     </div>
                     <div className="flex flex-col items-center justify-center gap-4 pt-8 opacity-0 animate-fade-up [animation-delay:2200ms] [animation-duration:600ms]">
-                      <p className="text-gray-500 text-center">Share your website roast with the world!</p>
+                      <p className="text-gray-500 text-center">take screenshots from above and share</p>
                       <ShareButton websiteUrl={params.websiteurl} />
                     </div>
                   </>
@@ -468,7 +468,7 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                       <ChevronRight className="w-5 h-5 shrink-0 group-hover:translate-x-1 transition-transform" />
                     </Link>
                     
-                    <p className="text-md text-center text-gray-600 pt-2">
+                    <p className="text-lg text-center text-gray-600 pt-2">
                       <Link 
                         href="https://github.com/exa-labs/roast-my-website"
                         target="_blank"

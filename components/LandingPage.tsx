@@ -51,7 +51,7 @@ export default function RoastMyWebsite() {
         <Link href="https://x.com/ExaAILabs" target="_blank">
           <AnimatedGradientText>
             <span className="px-1 inline animate-gradient bg-gradient-to-r from-[#254bf1] via-purple-600 to-[#254bf1] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent">
-              Follow us on Twitter now!
+              Follow us on Twitter now
             </span>
             <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 text-brand-default" />
           </AnimatedGradientText>
@@ -107,7 +107,7 @@ export default function RoastMyWebsite() {
             <ChevronRight className="w-4 h-4 shrink-0" />
           </Link>
   
-          <p className="text-md text-center text-gray-600 pt-2">
+          <p className="text-lg text-center text-gray-600 pt-2">
             <Link 
               href="https://github.com/exa-labs/roast-my-website"
               target="_blank"
