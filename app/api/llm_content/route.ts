@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       human_form: z.string(),
       money: z.string(),
       cringy_content: z.array(z.string()).length(3),
-      improvements: z.array(z.string()).length(5),
+      improvements: z.array(z.string()).length(3),
       overused_words: z.array(z.object({
         word: z.string(),
         emoji: z.string()
@@ -75,8 +75,8 @@ Something like: "Very high chance this becomes a billion dollar company because 
 🤡 CRINGY CONTENT (3 moments)
 Find exactly 3 cringy moments from their content. Format each as: "Cringy content..." followed by why it's cringy in a few words.
 
-🛠️ IMPROVEMENTS (5 simple recommendations)
-Give 5 simple, positive, actually useful improvements.
+🛠️ IMPROVEMENTS (3 simple recommendations)
+Give 3 simple, positive, actually useful improvements.
 
 📝 OVERUSED WORDS (top 3)
 Find the top 3 most overused words on their website with emojis.
