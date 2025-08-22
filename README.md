@@ -75,6 +75,8 @@ npm run dev
 - **Exa API Key**: [dashboard.exa.ai/api-keys](https://dashboard.exa.ai/api-keys) - For website content scraping
 - **Firebase Config**: [console.firebase.google.com](https://console.firebase.google.com/) - Create a new project and get config from Project Settings
 
+Make sure to create the "website_roasts" collection in firebase database.
+
 <br>
 
 ## ⭐ About [Exa](https://exa.ai)
