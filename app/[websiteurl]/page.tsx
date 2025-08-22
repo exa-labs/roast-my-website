@@ -209,10 +209,10 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                 <Link 
                   href="https://dashboard.exa.ai/"
                   target="_blank"
-                  className="bg-black hover:bg-gray-900 text-white font-medium py-2 px-4 rounded-none transition-all flex items-center gap-2 group text-sm hover:scale-[1.02] hover:shadow-lg"
+                  className="bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-800 text-white py-3 px-6 rounded-md transition-all flex items-center gap-2 group text-base hover:shadow-md shadow-sm"
                 >
                   <span>Built with Exa API - Try here</span>
-                  <ChevronRight className="w-4 h-4 shrink-0" />
+                  <ChevronRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </div>
@@ -457,10 +457,10 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                   <div className="max-w-md mx-auto flex flex-col items-center gap-6">
                     <Link 
                       href="https://dashboard.exa.ai/"
-                      className="w-full max-w-xl bg-black hover:bg-gray-900 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-none transition-all flex items-center justify-center gap-2 group whitespace-normal text-sm md:text-base hover:scale-[1.02] hover:shadow-lg"
+                      className="w-full max-w-xl bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-800 text-white py-4 md:py-5 px-6 md:px-8 rounded-lg transition-all flex items-center justify-center gap-3 group whitespace-normal text-lg md:text-xl hover:scale-105 hover:shadow-2xl shadow-lg transform"
                     >
                       <span>Built with Exa API  -  Try here</span>
-                      <ChevronRight className="w-4 h-4 shrink-0" />
+                      <ChevronRight className="w-5 h-5 shrink-0 group-hover:translate-x-1 transition-transform" />
                     </Link>
                     
                     <p className="text-md text-center text-gray-600 pt-2">
