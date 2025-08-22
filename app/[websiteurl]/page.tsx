@@ -207,11 +207,11 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
             <div className="w-full mx-auto px-4 opacity-0 animate-fade-up [animation-delay:600ms]">
               <div className="flex justify-center mb-8">
                 <Link 
-                  href="https://dashboard.exa.ai/"
+                  href="https://x.com/ExaAILabs"
                   target="_blank"
                   className="bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-gray-800 text-white py-3 px-6 rounded-md transition-all flex items-center gap-2 group text-base hover:shadow-md shadow-sm"
                 >
-                  <span>Built with Exa API - Try here</span>
+                  <span>Follow us on Twitter for more tools</span>
                   <ChevronRight className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
@@ -275,7 +275,7 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
 
         {!isLoading && !error && !websiteData && (
           <div className="flex items-center justify-center">
-            <p className="text-gray-600">No website data found.</p>
+            <p className="text-gray-600">your website so bad that we dont even to roast it. but do try submitting again.</p>
           </div>
         )}
 
@@ -285,6 +285,11 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
             {/* Website Roast Display with Cards */}
             {llmAnalysis && (
               <div className="mb-10 space-y-16">
+                
+                {/* Share instruction text */}
+                <div className="text-center opacity-0 animate-fade-up [animation-delay:400ms] [animation-duration:800ms]">
+                  <p className="text-gray-700 font-medium text-lg pt-2">take screenshots and share with your friends</p>
+                </div>
                 
                 {/* Roast Points */}
                 {Array.isArray(llmAnalysis.roast) && llmAnalysis.roast.length > 0 && (

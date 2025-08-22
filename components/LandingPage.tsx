@@ -48,10 +48,10 @@ export default function RoastMyWebsite() {
     <div className="flex flex-col min-h-screen w-full md:max-w-4xl z-0">
       {/* Badge positioned at the top */}
       <div className="w-full flex justify-center pt-6 opacity-0 animate-fade-up [animation-delay:200ms]">
-        <Link href="https://exa.ai/" target="_blank">
+        <Link href="https://x.com/ExaAILabs" target="_blank">
           <AnimatedGradientText>
             <span className="px-1 inline animate-gradient bg-gradient-to-r from-[#254bf1] via-purple-600 to-[#254bf1] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent">
-              Learn About Exa - The Search Engine for AI
+              Follow us on Twitter now!
             </span>
             <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 text-brand-default" />
           </AnimatedGradientText>
