@@ -29,7 +29,7 @@ export function ListCard({ title, emoji, items, gradient = "from-red-500 to-oran
           ))}
         </div>
         <div className="text-right pt-2">
-          <span className="text-xs md:text-sm text-gray-400">
+          <span className="text-sm md:text-base text-gray-400">
             <span className="">roastmywebsite.exa.ai</span>
           </span>
         </div>

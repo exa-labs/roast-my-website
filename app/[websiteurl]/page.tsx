@@ -232,9 +232,9 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
         {!isLoading && websiteData && websiteData.results && websiteData.results.length > 0 && (
           <div className="mb-10 opacity-0 animate-fade-up [animation-delay:300ms] [animation-duration:800ms]">
             <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-              <div className="flex items-start gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 {websiteData.results[0].image && (
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 self-center sm:self-start">
                     <img 
                       src={websiteData.results[0].image} 
                       alt={websiteData.results[0].title || params.websiteurl}
@@ -245,7 +245,7 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                     />
                   </div>
                 )}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 text-center sm:text-left">
                   <h2 className="text-xl font-bold text-gray-900 mb-2">
                     {websiteData.results[0].title || params.websiteurl}
                   </h2>

@@ -26,7 +26,7 @@ export function HighlightCard({ title, emoji, content, gradient = "from-brand-de
           content
         )}
         <div className="text-right pt-2">
-          <span className="text-xs md:text-sm text-gray-400">
+          <span className="text-sm md:text-base text-gray-400">
             <span className="">roastmywebsite.exa.ai</span>
           </span>
         </div>
