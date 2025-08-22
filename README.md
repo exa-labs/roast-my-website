@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔥 Roast My Website
+### Powered by [Exa](https://exa.ai) - The Web Search API
 
-## Getting Started
+App Link: https://roastmywebsite.exa.ai
 
-First, run the development server:
+![Screenshot](https://roastmywebsite.exa.ai/opengraph-image.jpg)
 
+<br>
+
+## 🎯 What is Roast My Website App?
+
+Roast My Website is a free and open-source web application that uses AI to analyze your website and provide brutally honest feedback.
+
+This app scrapes your website content, analyzes it for strengths and weaknesses, and presents the feedback with roasts, jokes, competitor comparisons, and improvement suggestions.
+
+<br>
+
+## 💻 Tech Stack
+- **Search Engine API**: [Exa API](https://exa.ai) - Web search API designed for LLMs
+- **Language Model**: [Anthropic Claude Sonnet 4](https://www.anthropic.com/claude) - Latest Claude model for intelligent analysis
+- **Frontend**: [Next.js 14](https://nextjs.org/docs) with App Router, [TailwindCSS](https://tailwindcss.com), TypeScript
+- **AI Integration**: [Vercel AI SDK](https://sdk.vercel.ai/docs/ai-sdk-core) with Anthropic provider
+
+<br>
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- Anthropic API key - [Get yours here](https://console.anthropic.com/)
+- Exa API key - [Get yours here](https://dashboard.exa.ai/api-keys)
+
+### Installation
+
+1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/exa-labs/roast-my-website.git
+cd roast-my-website
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables
+Create a `.env.local` file in the root directory:
+```env
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+EXA_API_KEY=your_exa_api_key_here
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server
+```bash
+npm run dev
+```
 
-## Learn More
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-To learn more about Next.js, take a look at the following resources:
+<br>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔑 Where to Get API Keys
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Anthropic API Key**: [console.anthropic.com](https://console.anthropic.com/) - For Claude Sonnet 4 AI analysis
+- **Exa API Key**: [dashboard.exa.ai/api-keys](https://dashboard.exa.ai/api-keys) - For website content scraping
 
-## Deploy on Vercel
+<br>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ⭐ About [Exa](https://exa.ai)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is powered by [Exa.ai](https://exa.ai), a web search API designed specifically for AI applications. Exa provides:
+
+- **AI-Optimized Search**: Search results relevant for language model consumption
+- **Real-time Web Scraping**: Current website data with content extraction
+- **LinkedIn Discovery**: Find company profiles and professional information
+
+[Try Exa API](https://dashboard.exa.ai)
+
+<br>
+
+---
+
+Built with ❤️ by [Exa Labs](https://exa.ai)

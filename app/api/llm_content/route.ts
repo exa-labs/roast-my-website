@@ -61,7 +61,7 @@ Give 5 brutal but specific roast points about this website. Make 5 friendly joke
 Give 5 strengths in "heading: subheading" format. Give 5 things they're great at. Hype them up.
 
 😂 JOKE
-Write a dad joke about them also can inlcude a pun in it (with the company name).
+Write a very witty joke and you can also include a pun in it (with the company name).
 
 🏆 COMPETITOR
 Pick some competitors/alternatives and praise the current website more than the competitor(s). Keep this very positive.
