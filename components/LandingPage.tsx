@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import AnimatedGradientText from "./ui/animated-gradient-text";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { cleanUrl, isValidDomain } from "@/lib/url-utils";
 
 export default function RoastMyWebsite() {
   const router = useRouter();
@@ -15,15 +16,7 @@ export default function RoastMyWebsite() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const cleanUrl = (input: string): string => {
-    // Remove http:// or https:// and www. if present
-    let cleanedUrl = input.replace(/(https?:\/\/)?(www\.)?/, '');
-    
-    // Remove trailing slashes
-    cleanedUrl = cleanedUrl.replace(/\/+$/, '');
-    
-    return cleanedUrl.toLowerCase();
-  };
+
 
   const handleRoast = async (e: FormEvent) => {
     e.preventDefault(); // Prevent form submission refresh
@@ -37,8 +30,15 @@ export default function RoastMyWebsite() {
     setError(null);
     setIsLoading(true);
 
-    // Clean the URL
+    // Clean the URL using our utility function
     const cleanedUrl = cleanUrl(websiteUrl);
+
+    // Validate that we have a proper domain
+    if (!isValidDomain(cleanedUrl)) {
+      setError("Please enter a valid website URL (e.g., example.com)");
+      setIsLoading(false);
+      return;
+    }
 
     // Route to the /[website] page
     router.push(`/${cleanedUrl}`);
