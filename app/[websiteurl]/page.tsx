@@ -43,11 +43,72 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
   const [linkedinData, setLinkedinData] = useState<LinkedInData | null>(null);
   const [llmAnalysis, setLlmAnalysis] = useState<LLMAnalysis | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [existsInFirebase, setExistsInFirebase] = useState(false);
   
   // Loading states for each API call
   const [websiteLoading, setWebsiteLoading] = useState(true);
   const [linkedinLoading, setLinkedinLoading] = useState(true);
   const [llmLoading, setLlmLoading] = useState(false);
+
+  // Function to save data to Firebase
+  const saveToFirebase = async (websiteData: WebsiteData, linkedinData: LinkedInData | null, llmAnalysis: LLMAnalysis) => {
+    try {
+      console.log('Attempting to save to Firebase:', { websiteUrl: params.websiteurl });
+      const response = await fetch("/api/firebase", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          websiteUrl: params.websiteurl,
+          websiteData,
+          linkedinData,
+          llmAnalysis
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        console.error('Failed to save to Firebase:', result);
+      } else {
+        console.log('Successfully saved to Firebase:', result);
+      }
+    } catch (error) {
+      console.error("Error saving to Firebase:", error);
+    }
+  };
+
+  // Check Firebase cache first
+  const checkFirebaseCache = async (): Promise<boolean> => {
+    try {
+      console.log('Checking Firebase cache for:', params.websiteurl);
+      const response = await fetch(`/api/firebase?websiteUrl=${encodeURIComponent(params.websiteurl)}`);
+      const data = await response.json();
+      if (data.error) {
+        console.error('Failed to fetch from Firebase:', data.error);
+        return false;
+      }
+
+      // Check if we have complete data
+      if (response.ok && data.websiteData && data.llmAnalysis && 
+          Object.keys(data.llmAnalysis).length > 0 && data.llmAnalysis.roast) {
+        console.log('Found complete cached data in Firebase');
+        setWebsiteData(data.websiteData);
+        setLinkedinData(data.linkedinData || null);
+        setLlmAnalysis(data.llmAnalysis);
+        setExistsInFirebase(true);
+        setIsLoading(false);
+        setWebsiteLoading(false);
+        setLinkedinLoading(false);
+        return true;
+      }
+      console.log('No complete cached data found in Firebase');
+      return false;
+    } catch (error) {
+      console.error("Error checking Firebase cache:", error);
+      return false;
+    }
+  };
 
   // Fetch website data using Exa API
   const fetchWebsiteData = async () => {
@@ -152,6 +213,12 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
         }
       }
 
+      // Save to Firebase after streaming is complete, using the final data
+      if (websiteData && linkedinData !== undefined && finalAnalysis && Object.keys(finalAnalysis).length > 0) {
+        console.log('Saving final data to Firebase');
+        saveToFirebase(websiteData, linkedinData, finalAnalysis);
+      }
+
       return finalAnalysis;
     } catch (err) {
       console.error("Failed to analyze content:", err);
@@ -164,11 +231,25 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
 
   useEffect(() => {
     const loadData = async () => {
-      // Start both API calls in parallel
-      const [websiteResult, linkedinResult] = await Promise.allSettled([
+      // Start Firebase check and scraping in parallel
+      const firebasePromise = checkFirebaseCache();
+      const scrapingPromise = Promise.allSettled([
         fetchWebsiteData(),
         fetchLinkedInData()
       ]);
+
+      // Wait for Firebase check to complete first
+      const cachedDataFound = await firebasePromise;
+      
+      if (cachedDataFound) {
+        // Firebase data found - show it immediately and we're done!
+        console.log('Using cached data, stopping scraping if still in progress');
+        return;
+      }
+
+      // No cached data, wait for scraping to complete
+      console.log('No cached data, waiting for scraping to complete');
+      const [websiteResult, linkedinResult] = await scrapingPromise;
 
       // Extract successful results
       const websiteData = websiteResult.status === 'fulfilled' ? websiteResult.value : null;
@@ -219,7 +300,7 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
         
           {/* Loading States */}
           {(websiteLoading || linkedinLoading) && (
-            <div className="flex items-center justify-center mt-10">
+            <div className="flex items-center justify-center mt-10 opacity-0 animate-fade-up">
               <div className="flex items-center gap-3">
                 <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-gray-900"></div>
                 <p className="text-gray-600 text-lg">Scraping website content...</p>
@@ -250,6 +331,11 @@ export default function WebsiteRoastPage({ params }: { params: { websiteurl: str
                     {websiteData.results[0].title || params.websiteurl}
                   </h2>
                   <p className="text-gray-600 text-sm">{params.websiteurl}</p>
+                  {/* {existsInFirebase && (
+                    <div className="flex items-center justify-center sm:justify-start mt-3">
+                      <p className="text-green-600 text-sm font-medium">✨ Loaded from cache (instant results!)</p>
+                    </div>
+                  )} */}
                 </div>
               </div>
             </div>
